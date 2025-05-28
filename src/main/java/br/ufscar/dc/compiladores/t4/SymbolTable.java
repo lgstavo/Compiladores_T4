@@ -1,0 +1,63 @@
+// Classe tableDeSimbolos, inspirada no código apresentado pelo
+// professor em sala de aula.
+
+package br.ufscar.dc.compiladores.t4;
+
+import java.util.HashMap;
+import java.util.Map;
+import static br.ufscar.dc.compiladores.t4.SemanticUtils.reduceName;
+
+public class SymbolTable {
+
+    private final Map<String, SymbolTableEntry> table;
+
+    public SymbolTable() {
+        this.table = new HashMap<>();
+    }
+
+    public enum TypeT4 {
+        INTEGER,
+        REAL,
+        LITERAL,
+        LOGIC,
+        VOID,
+        REGISTER,
+        INVALID
+    }
+
+    public enum EntryType {
+        VARIABLE,
+        PROCEEDING,
+        FUNCTION
+    }
+
+    static class SymbolTableEntry {
+        String name;
+        TypeT4 tipo;
+        EntryType tipoE;
+
+        private SymbolTableEntry(String name, TypeT4 tipo, EntryType tipoE) {
+            this.name = name;
+            this.tipo = tipo;
+            this.tipoE = tipoE;
+        }
+    }
+
+    public TypeT4 verify(String name) {
+        name = reduceName(name, "[");
+
+        return table.get(name).tipo;
+    }
+
+    public void add(String name, TypeT4 tipo, EntryType tipoE) {
+        name = reduceName(name, "[");
+
+        table.put(name, new SymbolTableEntry(name, tipo, tipoE));
+    }
+
+    public boolean exists(String name) {
+        name = reduceName(name, "[");
+
+        return table.containsKey(name);
+    }
+}
